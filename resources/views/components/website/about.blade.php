@@ -1,16 +1,4 @@
 <section class="py-24 sm:py-32">
-    {{-- <div>
-            -- How am I -- <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint natus praesentium nisi commodi mollitia, aperiam maiores quos, quibusdam fugit ullam minima quas esse culpa minus voluptas inventore unde soluta quis? <br />
-        </div>
-
-        <div class="mt-1">
-            <div class="flex">
-                <div>ICON</div>
-                <div>PHP</div>
-            </div>
-
-        </div> --}}
     <div class="bg-white py-24 sm:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto max-w-2xl lg:text-center">
@@ -22,65 +10,113 @@
                     <div class="relative pl-16">
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
-                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" aria-hidden="true" data-slot="icon">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                </svg>
+                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M13.8179 4.54512L13.6275 4.27845C12.8298 3.16176 11.1702 3.16176 10.3725 4.27845L10.1821 4.54512C9.76092 5.13471 9.05384 5.45043 8.33373 5.37041L7.48471 5.27608C6.21088 5.13454 5.13454 6.21088 5.27608 7.48471L5.37041 8.33373C5.45043 9.05384 5.13471 9.76092 4.54512 10.1821L4.27845 10.3725C3.16176 11.1702 3.16176 12.8298 4.27845 13.6275L4.54512 13.8179C5.13471 14.2391 5.45043 14.9462 5.37041 15.6663L5.27608 16.5153C5.13454 17.7891 6.21088 18.8655 7.48471 18.7239L8.33373 18.6296C9.05384 18.5496 9.76092 18.8653 10.1821 19.4549L10.3725 19.7215C11.1702 20.8382 12.8298 20.8382 13.6275 19.7215L13.8179 19.4549C14.2391 18.8653 14.9462 18.5496 15.6663 18.6296L16.5153 18.7239C17.7891 18.8655 18.8655 17.7891 18.7239 16.5153L18.6296 15.6663C18.5496 14.9462 18.8653 14.2391 19.4549 13.8179L19.7215 13.6275C20.8382 12.8298 20.8382 11.1702 19.7215 10.3725L19.4549 10.1821C18.8653 9.76092 18.5496 9.05384 18.6296 8.33373L18.7239 7.48471C18.8655 6.21088 17.7891 5.13454 16.5153 5.27608L15.6663 5.37041C14.9462 5.45043 14.2391 5.13471 13.8179 4.54512Z" stroke="#ffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 12L10.8189 13.8189V13.8189C10.9189 13.9189 11.0811 13.9189 11.1811 13.8189V13.8189L15 10" stroke="#ffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                             </div>
-                            Push to deploy
+                            Certified Software Developer
                         </dt>
-                        <dd class="mt-2 text-base/7 text-gray-600">Morbi viverra dui mi arcu sed. Tellus semper
-                            adipiscing suspendisse semper morbi. Odio urna massa nunc massa.</dd>
+                        <dd class="mt-2 text-base/7 text-gray-600">
+                            I hold a Computer Science degree from Portugal and continuously enhance my skills through self-learning. I leverage platforms like videos, forums, and blogs to stay updated, combining formal training with hands-on exploration to deliver innovative solutions.
+                        </dd>
+                    </div>
+                    <div class="relative pl-16">
+                        <dt class="text-base/7 font-semibold text-gray-900">
+                            <div class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
+                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 -1 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>briefcase</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-204.000000, -204.000000)" fill="#fff"> <path d="M234,217 L206,217 L206,212 C206,210.896 206.896,210 208,210 L232,210 C233.104,210 234,210.896 234,212 L234,217 L234,217 Z M218,220 C218,219.634 218.105,219.296 218.277,219 L221.723,219 C221.895,219.296 222,219.634 222,220 C222,221.104 221.104,222 220,222 C218.896,222 218,221.104 218,220 L218,220 Z M234,230 C234,231.104 233.104,232 232,232 L208,232 C206.896,232 206,231.104 206,230 L206,219 L216.142,219 C216.058,219.321 216,219.652 216,220 C216,222.209 217.791,224 220,224 C222.209,224 224,222.209 224,220 C224,219.652 223.942,219.321 223.858,219 L234,219 L234,230 L234,230 Z M216,207 C216,206.448 216.448,206 217,206 L223,206 C223.552,206 224,206.448 224,207 L224,208 L216,208 L216,207 L216,207 Z M232,208 L226,208 L226,206 C226,204.896 225.104,204 224,204 L216,204 C214.896,204 214,204.896 214,206 L214,208 L208,208 C205.791,208 204,209.791 204,212 L204,230 C204,232.209 205.791,234 208,234 L232,234 C234.209,234 236,232.209 236,230 L236,212 C236,209.791 234.209,208 232,208 L232,208 Z" id="briefcase" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>
+                            </div>
+                            Professional Experience
+                        </dt>
+                        <dd class="mt-2 text-base/7 text-gray-600">
+                            I have 5+ years of experience creating scalable, user-friendly web applications. I specialize in building modern e-commerce solutions and optimizing back-end performance.
+                        </dd>
                     </div>
                     <div class="relative pl-16">
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
                                 class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
-                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" aria-hidden="true" data-slot="icon">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                </svg>
+                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" id="team" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="_24x24_user--dark" data-name="24x24/user--dark"> <rect id="Rectangle" width="24" height="24" fill="none"></rect> </g> <path id="Combined_Shape" data-name="Combined Shape" d="M0,12.106C0,8.323,4.5,9.08,4.5,7.567a2.237,2.237,0,0,0-.41-1.513A3.5,3.5,0,0,1,3,3.4,3.222,3.222,0,0,1,6,0,3.222,3.222,0,0,1,9,3.4,3.44,3.44,0,0,1,7.895,6.053,2.333,2.333,0,0,0,7.5,7.567c0,1.513,4.5.757,4.5,4.54,0,0-1.195.894-6,.894S0,12.106,0,12.106Z" transform="translate(6 8)" fill="none" stroke="#ffff" stroke-miterlimit="10" stroke-width="1.5"></path> <path id="Combined_Shape-2" data-name="Combined Shape" d="M4.486,12.967c-.569-.026-1.071-.065-1.512-.114A6.835,6.835,0,0,1,0,12.106C0,8.323,4.5,9.08,4.5,7.567a2.237,2.237,0,0,0-.41-1.513A3.5,3.5,0,0,1,3,3.4,3.222,3.222,0,0,1,6,0,3.222,3.222,0,0,1,9,3.4" transform="translate(1 3)" fill="none" stroke="#ffff" stroke-miterlimit="10" stroke-width="1.5"></path> <path id="Combined_Shape-3" data-name="Combined Shape" d="M-4.486,12.967c.569-.026,1.071-.065,1.512-.114A6.835,6.835,0,0,0,0,12.106C0,8.323-4.5,9.08-4.5,7.567a2.237,2.237,0,0,1,.41-1.513A3.5,3.5,0,0,0-3,3.4,3.222,3.222,0,0,0-6,0,3.222,3.222,0,0,0-9,3.4" transform="translate(23 3)" fill="none" stroke="#ffff" stroke-miterlimit="10" stroke-width="1.5"></path> </g></svg>
                             </div>
-                            SSL certificates
+                            Team Lead
                         </dt>
-                        <dd class="mt-2 text-base/7 text-gray-600">Sit quis amet rutrum tellus ullamcorper ultricies
-                            libero dolor eget. Sem sodales gravida quam turpis enim lacus amet.</dd>
+                        <dd class="mt-2 text-base/7 text-gray-600">
+                            I have consistently taken on leadership roles, managing teams of 3 to 6 developers across multiple projects. My responsibilities included task delegation, code reviews, mentoring team members, and ensuring project milestones were met. I prioritize fostering collaboration, maintaining efficient workflows, and aligning the team’s efforts with business objectives.
+                        </dd>
                     </div>
                     <div class="relative pl-16">
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
                                 class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
-                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" aria-hidden="true" data-slot="icon">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                </svg>
+                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" id="bracket-2" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path id="primary" d="M15,3h2a1,1,0,0,1,1,1v6a2,2,0,0,0,2,2h0a2,2,0,0,0-2,2v6a1,1,0,0,1-1,1H15" style="fill: none; stroke: #ffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path><path id="primary-2" data-name="primary" d="M9,3H7A1,1,0,0,0,6,4v6a2,2,0,0,1-2,2H4a2,2,0,0,1,2,2v6a1,1,0,0,0,1,1H9" style="fill: none; stroke: #ffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></g></svg>
                             </div>
-                            Simple queues
+                            API Development
                         </dt>
-                        <dd class="mt-2 text-base/7 text-gray-600">Quisque est vel vulputate cursus. Risus proin diam
-                            nunc commodo. Lobortis auctor congue commodo diam neque.</dd>
-                    </div>
-                    <div class="relative pl-16">
-                        <dt class="text-base/7 font-semibold text-gray-900">
-                            <div
-                                class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
-                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" aria-hidden="true" data-slot="icon">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33" />
-                                </svg>
-                            </div>
-                            Advanced security
-                        </dt>
-                        <dd class="mt-2 text-base/7 text-gray-600">Arcu egestas dolor vel iaculis in ipsum mauris.
-                            Tincidunt mattis aliquet hac quis. Id hac maecenas ac donec pharetra eget.</dd>
+                        <dd class="mt-2 text-base/7 text-gray-600">
+                            I excel in designing and implementing robust, efficient APIs that enable seamless communication between systems. My expertise includes RESTful API development, API documentation, and integration with third-party services. I prioritize scalability, security, and performance to ensure APIs meet both technical and business needs.
+                        </dd>
                     </div>
                 </dl>
             </div>
         </div>
     </div>
 
+    <div class="relative isolate overflow-hidden bg-gray-900 py-16 sm:py-24 lg:py-32">
+        {{-- TODO: When click there should be years of experience --}}
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <h2 class="text-center text-lg/8 font-semibold text-white px-10">Trusted tools I use frequently.</h2>
+            <div class="mx-auto max-w-7xl px-6 lg:px-8 mt-16">
+                <div class="mx-auto mt-10 grid max-w-lg grid-cols-3 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-5 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
+                    <!-- PHP -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/php.svg" alt="PHP" title="PHP" width="158" height="48">
+                    </div>
+                    <!-- JavaScript -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/javascript.svg" alt="JavaScript" title="JavaScript" title="JavaScript" width="158" height="48">
+                    </div>
+                    <!-- Laravel -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/laravel.svg" alt="Laravel" title="Laravel" width="158" height="48">
+                    </div>
+                    <!-- Vue -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/vue.svg" alt="Vue.js" title="Vue.js" width="158" height="48">
+                    </div>
+                    <!-- Livewire -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/livewire.svg" alt="Livewire" title="Livewire" width="158" height="48">
+                    </div>
+                    <!-- jQuery -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/jquery-white.svg" alt="jQuery" title="jQuery" width="158" height="48">
+                    </div>
+                    <!-- Docker -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/docker.svg" alt="Docker" title="Docker" width="158" height="48">
+                    </div>
+                    <!-- AWS -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/aws-white.svg" alt="Aws" title="Aws" width="158" height="48">
+                    </div>
+                    <!-- Python -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/python.svg" alt="Python" title="Python" width="158" height="48">
+                    </div>
+                    <div class="sm:hidden block"></div>
+                    <!-- MySQL -->
+                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
+                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
+                            src="website/logos/mysql.svg" alt="MySQL" title="MySQL" width="158" height="48">
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
 </section>
