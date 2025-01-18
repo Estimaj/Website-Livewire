@@ -23,7 +23,9 @@
         @endif
     </head>
     {{-- TODO: Darkmode  dark:bg-black dark:text-white/50 --}}
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased" x-data="{
+        isAdminPlatformModalActive: false,
+    }">
         {{ $slot }}
     </body>
 </html>
