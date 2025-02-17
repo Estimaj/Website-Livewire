@@ -3,49 +3,8 @@
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-16 gap-y-16 lg:max-w-none lg:grid-cols-3">
         <div class="col-span-1 lg:col-span-2">
-          <h2 class="text-4xl font-semibold tracking-tight text-white">Contact Form</h2>
-          <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div class="sm:col-span-3">
-              <label for="first-name" class="block text-sm/6 font-medium text-gray-400">First name</label>
-              <div class="mt-2">
-                <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-              </div>
-            </div>
-        
-            <div class="sm:col-span-3">
-              <label for="last-name" class="block text-sm/6 font-medium text-gray-400">Last name</label>
-              <div class="mt-2">
-                <input type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-              </div>
-            </div>
-        
-            <div class="sm:col-span-4">
-              <label for="email" class="block text-sm/6 font-medium text-gray-400">Email address</label>
-              <div class="mt-2">
-                <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-              </div>
-            </div>
-            
-            <div class="sm:col-span-2">
-              <label for="phone" class="block text-sm/6 font-medium text-gray-400">Phone Number</label>
-              <div class="mt-2">
-                <input id="phone" name="phone" type="tel" autocomplete="tel" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-              </div>
-            </div>
-            
-            <div class="col-span-full">
-              <label for="message" class="block text-sm/6 font-medium text-gray-400">Message</label>
-              <div class="mt-2">
-                <textarea name="message" id="message" rows="2" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></textarea>
-              </div>
-            </div>
-
-            <div class="col-span-full">
-              <button type="submit" class="w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
-            </div>
-          </div>
+          <livewire:contact-form />
         </div>
-        {{-- TODO: Put some personal info --}}
         <dl class="grid grid-cols-1 gap-x-8 gap-y-10 max-sm:grid-cols-2 lg:pt-2">
           <div class="flex flex-col items-start">
             <dt class="mt-4 text-base font-semibold text-white">Contact</dt>
