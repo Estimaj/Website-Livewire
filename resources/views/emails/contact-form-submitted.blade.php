@@ -9,9 +9,9 @@
         <h2>New Contact Form Submission</h2>
 
         <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px;">
-            <p><strong>Name:</strong> {{ $firstName }} {{ $lastName }}</p>
-            <p><strong>Email:</strong> {{ $email }}</p>
-            <p><strong>Phone:</strong> {{ $phone }}</p>
+            <p><strong>Name:</strong> {{ $data['firstName'] }} {{ $data['lastName'] }}</p>
+            <p><strong>Email:</strong> {{ $data['email'] }}</p>
+            <p><strong>Phone:</strong> {{ $data['phone'] }}</p>
             <p><strong>Message:</strong><br>
             {{ $data['message'] }}</p>
         </div>

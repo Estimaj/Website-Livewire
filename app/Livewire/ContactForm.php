@@ -3,12 +3,13 @@
 namespace App\Livewire;
 
 use App\Enums\ActivityType;
-use Livewire\Component;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
-use Facades\App\Services\ActivityLoggerService;
 use App\Mail\ContactFormConfirmation;
-use App\Mail\ContactFormSubmitted;
+use App\Notifications\ContactFormSubmitted as ContactFormSubmittedNotification;
+use Facades\App\Services\ActivityLoggerService;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
+use Livewire\Component;
+
 class ContactForm extends Component
 {
     public $firstName = '';
@@ -32,15 +33,14 @@ class ContactForm extends Component
         ActivityLoggerService::withProperties($validated)
             ->log(ActivityType::CONTACT_FORM_SUBMISSION);
 
-        Mail::to(config('mail.from.address'))->queue(new ContactFormSubmitted($validated));
+        Notification::route('telegram', config('services.telegram-bot-api.chat_id'))
+            ->route('mail', config('mail.from.address'))
+            ->notify(new ContactFormSubmittedNotification($validated));
+
         Mail::to($validated['email'])->queue(new ContactFormConfirmation(
             name: "{$validated['firstName']} {$validated['lastName']}",
             note: $validated['message']
         ));
-
-        // Here you would add your Telegram notification logic
-        // Notification::route('telegram', 'TELEGRAM_CHAT_ID')
-        //     ->notify(new ContactFormNotification($validated));
 
         $this->reset();
         session()->flash('success', 'Thank you for your message. We\'ll get back to you soon!');
