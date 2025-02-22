@@ -61,50 +61,50 @@
     <div class="relative isolate overflow-hidden bg-gray-900 py-16 sm:py-24 lg:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <h2 class="text-center text-lg/8 font-semibold text-white px-10">Trusted tools I use frequently.</h2>
-            <p class="text-center text-sm text-gray-400 mt-2">(Click on any tool to see years of experience)</p>
+            <p class="text-center text-sm text-gray-400 mt-2">(Click on any tool to see more information)</p>
             <div class="mx-auto max-w-7xl px-6 lg:px-8 mt-16">
                 <div class="mx-auto mt-10 grid max-w-lg grid-cols-3 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-5 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
                     <x-website.partials.tool-card 
                         name="PHP"
                         logo="website/logos/php.svg"
-                        :years="now()->year - 2021" />
+                        :overlayText="(now()->year - 2021) . '+ Years'" />
                     <x-website.partials.tool-card
                         name="JavaScript" 
                         logo="website/logos/javascript.svg"
-                        :years="now()->year - 2020" />
+                        :overlayText="(now()->year - 2020) . '+ Years'" />
                     <x-website.partials.tool-card
                         name="Laravel" 
                         logo="website/logos/laravel.svg"
-                        :years="now()->year - 2021" />
+                        :overlayText="(now()->year - 2021) . '+ Years'" />
                     <x-website.partials.tool-card
                         name="Vue.js" 
                         logo="website/logos/vue.svg"
-                        :years="now()->year - 2022" />
+                        :overlayText="(now()->year - 2022) . '+ Years'" />
                     <x-website.partials.tool-card
                         name="Livewire" 
                         logo="website/logos/livewire.svg"
-                        :years="now()->year - 2024" />
+                        :overlayText="(now()->year - 2024) . '+ Years'" />
                     <x-website.partials.tool-card
                         name="jQuery" 
                         logo="website/logos/jquery-white.svg"
-                        :years="now()->year - 2021" />
+                        overlayText="2021 - 2024" />
                     <x-website.partials.tool-card
                         name="Docker" 
                         logo="website/logos/docker.svg"
-                        :years="now()->year - 2023" />
+                        :overlayText="(now()->year - 2023) . '+ Years'" />
                     <x-website.partials.tool-card
                         name="AWS" 
                         logo="website/logos/aws-white.svg"
-                        :years="now()->year - 2024" />
+                        :overlayText="(now()->year - 2024) . '+ Years'" />
                     <x-website.partials.tool-card
                         name="Python" 
                         logo="website/logos/python.svg"
-                        :years="now()->year - 2024" />
+                        :overlayText="(now()->year - 2024) . '+ Years'" />
                     <div class="sm:hidden block"></div>
                     <x-website.partials.tool-card
                         name="MySQL" 
                         logo="website/logos/mysql.svg"
-                        :years="now()->year - 2019" />
+                        :overlayText="(now()->year - 2019) . '+ Years'" />
                 </div>
             </div>
         </div>
