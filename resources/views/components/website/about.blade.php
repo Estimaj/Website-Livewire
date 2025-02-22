@@ -38,7 +38,7 @@
                             Team Lead
                         </dt>
                         <dd class="mt-2 text-base/7 text-gray-600">
-                            I have consistently taken on leadership roles, managing teams of 3 to 6 developers across multiple projects. My responsibilities included task delegation, code reviews, mentoring team members, and ensuring project milestones were met. I prioritize fostering collaboration, maintaining efficient workflows, and aligning the team’s efforts with business objectives.
+                            I have consistently taken on leadership roles, managing teams of 3 to 6 developers across multiple projects. My responsibilities included task delegation, code reviews, mentoring team members, and ensuring project milestones were met. I prioritize fostering collaboration, maintaining efficient workflows, and aligning the team's efforts with business objectives.
                         </dd>
                     </div>
                     <div class="relative pl-16">
@@ -59,64 +59,54 @@
     </div>
 
     <div class="relative isolate overflow-hidden bg-gray-900 py-16 sm:py-24 lg:py-32">
-        {{-- TODO: When click there should be years of experience --}}
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <h2 class="text-center text-lg/8 font-semibold text-white px-10">Trusted tools I use frequently.</h2>
+            <p class="text-center text-sm text-gray-400 mt-2">(Click on any tool to see years of experience)</p>
             <div class="mx-auto max-w-7xl px-6 lg:px-8 mt-16">
                 <div class="mx-auto mt-10 grid max-w-lg grid-cols-3 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-5 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
-                    <!-- PHP -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/php.svg" alt="PHP" title="PHP" width="158" height="48">
-                    </div>
-                    <!-- JavaScript -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/javascript.svg" alt="JavaScript" title="JavaScript" title="JavaScript" width="158" height="48">
-                    </div>
-                    <!-- Laravel -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/laravel.svg" alt="Laravel" title="Laravel" width="158" height="48">
-                    </div>
-                    <!-- Vue -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/vue.svg" alt="Vue.js" title="Vue.js" width="158" height="48">
-                    </div>
-                    <!-- Livewire -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/livewire.svg" alt="Livewire" title="Livewire" width="158" height="48">
-                    </div>
-                    <!-- jQuery -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/jquery-white.svg" alt="jQuery" title="jQuery" width="158" height="48">
-                    </div>
-                    <!-- Docker -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/docker.svg" alt="Docker" title="Docker" width="158" height="48">
-                    </div>
-                    <!-- AWS -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/aws-white.svg" alt="Aws" title="Aws" width="158" height="48">
-                    </div>
-                    <!-- Python -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/python.svg" alt="Python" title="Python" width="158" height="48">
-                    </div>
+                    <x-website.partials.tool-card 
+                        name="PHP"
+                        logo="website/logos/php.svg"
+                        :years="now()->year - 2021" />
+                    <x-website.partials.tool-card
+                        name="JavaScript" 
+                        logo="website/logos/javascript.svg"
+                        :years="now()->year - 2020" />
+                    <x-website.partials.tool-card
+                        name="Laravel" 
+                        logo="website/logos/laravel.svg"
+                        :years="now()->year - 2021" />
+                    <x-website.partials.tool-card
+                        name="Vue.js" 
+                        logo="website/logos/vue.svg"
+                        :years="now()->year - 2022" />
+                    <x-website.partials.tool-card
+                        name="Livewire" 
+                        logo="website/logos/livewire.svg"
+                        :years="now()->year - 2024" />
+                    <x-website.partials.tool-card
+                        name="jQuery" 
+                        logo="website/logos/jquery-white.svg"
+                        :years="now()->year - 2021" />
+                    <x-website.partials.tool-card
+                        name="Docker" 
+                        logo="website/logos/docker.svg"
+                        :years="now()->year - 2023" />
+                    <x-website.partials.tool-card
+                        name="AWS" 
+                        logo="website/logos/aws-white.svg"
+                        :years="now()->year - 2024" />
+                    <x-website.partials.tool-card
+                        name="Python" 
+                        logo="website/logos/python.svg"
+                        :years="now()->year - 2024" />
                     <div class="sm:hidden block"></div>
-                    <!-- MySQL -->
-                    <div class="border border-gray-600 flex h-full items-center rounded-md w-full p-2 cursor-pointer bg-gray-800">
-                        <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1 "
-                            src="website/logos/mysql.svg" alt="MySQL" title="MySQL" width="158" height="48">
-                    </div>
+                    <x-website.partials.tool-card
+                        name="MySQL" 
+                        logo="website/logos/mysql.svg"
+                        :years="now()->year - 2019" />
                 </div>
             </div>
         </div>
-      </div>
+    </div>
 </section>
