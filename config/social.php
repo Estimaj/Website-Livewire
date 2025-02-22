@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'linkedin_url' => env('LINKEDIN_URL', 'https://www.linkedin.com/in/your-profile'),
-    'github_url' => env('GITHUB_URL', 'https://github.com/your-username'),
+    'linkedin_url' => 'https://www.linkedin.com/in/jo%C3%A3oestima/',
+    'github_url' => 'https://github.com/Estimaj?tab=repositories',
 ];
