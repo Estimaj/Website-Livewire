@@ -27,6 +27,7 @@
         isAdminPlatformModalActive: false,
     }">
         {{ $slot }}
+        <x-cookie-consent />
     </body>
 
     @if(app()->environment('production'))
