@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Schedule;
 //     $this->comment(Inspiring::quote());
 // })->purpose('Display an inspiring quote')->hourly();
 
-// Run migrations
-Schedule::command('migrate:check')->everyMinute()->withoutOverlapping();
+// Deploy check
+Schedule::command('deploy:check')->everyMinute()->withoutOverlapping();
 
 // Schedule run workers
 Schedule::command('queue:work', ['--stop-when-empty', '--no-interaction', '--max-jobs=2'])->everyMinute();
