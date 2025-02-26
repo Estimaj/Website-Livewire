@@ -36,7 +36,12 @@ jobs:
         run: npm ci
 
       - name: 📂 Directory Permissions
-        run: chmod -R 777 storage bootstrap/cache
+        run: |
+          mkdir -p storage/logs
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/views
+          chmod -R 777 storage bootstrap/cache
 
       - name: 📦 Install Composer dependencies
         uses: ramsey/composer-install@v2
