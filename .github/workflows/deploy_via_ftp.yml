@@ -51,6 +51,6 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_PRODUCTION_USERNAME }}
           password: ${{ secrets.FTP_PRODUCTION_PASSWORD }}
-          server-dir: "admin/"
+          server-dir: "/"
           log-level: verbose
           state-name: ".deployment-state"
