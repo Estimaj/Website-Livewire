@@ -1,5 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-name: Deploy via ftp Production
+name: Deploy via FTP Production
 
 # Controls when the workflow will run
 on:
@@ -12,9 +12,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  deploy:
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -23,30 +21,34 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
 
-      - name: "Setup PHP"
-        uses: "shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e"
+      - name: 📦 Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.3"
+          php-version: '8.3'
 
-      - name: Use Node.js
-        uses: actions/setup-node@v2
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: '20'
+          cache: 'npm'
 
-      - name: Directory Permissions
+      - name: 📂 Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
 
-      - name: "Composer Install"
-        uses: "ramsey/composer-install@v2"
+      - name: 📦 Install Composer dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          composer-options: "--no-dev --optimize-autoloader"
 
-      - name: 🔨 production Project
+      - name: 📦 Install NPM dependencies
+        run: npm ci
+
+      - name: 🏗️ Build Assets with Vite
         run: |
-          npm install
           npm run build
 
-      # Final parte
-      - name: "Upload To FTP"
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      - name: 📤 Upload via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_PRODUCTION_USERNAME }}
@@ -54,3 +56,23 @@ jobs:
           server-dir: "/"
           log-level: verbose
           state-name: ".deployment-state"
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/storage/framework/cache/**
+            **/storage/framework/sessions/**
+            **/storage/framework/views/**
+            **/storage/logs/**
+            .env.example
+            .editorconfig
+            .styleci.yml
+            .gitignore
+            README.md
+            phpunit.xml
+            package-lock.json
+            vite.config.js
+            postcss.config.js
+            tailwind.config.js
+            jsconfig.json
