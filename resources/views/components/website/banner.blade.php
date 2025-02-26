@@ -1,5 +1,5 @@
-<section class="jumbotron d-flex align-items-center">
-    <div class="container text-center">
+<section class="jumbotron flex items-center">
+    <div class="container text-center mx-auto">
         <div class="mb-4 img">
             <img src="/website/img/profile.jpeg" alt="profile-img" style="width: 200px" />
         </div>

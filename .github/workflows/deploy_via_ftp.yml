@@ -1,0 +1,56 @@
+# This is a basic workflow to help you get started with Actions
+name: Deploy via ftp Production
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [main]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e"
+        with:
+          php-version: "8.3"
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+
+      - name: "Composer Install"
+        uses: "ramsey/composer-install@v2"
+
+      - name: 🔨 production Project
+        run: |
+          npm install
+          npm run build
+
+      # Final parte
+      - name: "Upload To FTP"
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_PRODUCTION_USERNAME }}
+          password: ${{ secrets.FTP_PRODUCTION_PASSWORD }}
+          server-dir: "admin/"
+          log-level: verbose
+          state-name: ".deployment-state"

@@ -22,7 +22,22 @@
             </style>
         @endif
     </head>
-    <body class="font-sans antialiased dark:bg-black dark:text-white/50">
+    {{-- TODO: Darkmode  dark:bg-black dark:text-white/50 --}}
+    <body class="font-sans antialiased" x-data="{
+        isAdminPlatformModalActive: false,
+    }">
         {{ $slot }}
+        <x-cookie-consent />
     </body>
+
+    @if(app()->environment('production'))
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-THF9G6T66L"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-THF9G6T66L');
+        </script>
+    @endif
 </html>

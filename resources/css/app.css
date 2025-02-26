@@ -5,3 +5,28 @@
 [x-cloak] {
     display: none;
 }
+
+/* .heading_container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+} */
+
+.heading_container h2::before,
+.heading_container h2::after {
+    content: "";
+    position: absolute;
+    z-index: 1000;
+    top: 50%;
+    width: 40px;
+    height: 3px;
+    /* background-color: #fec016; */
+    background-color: red;
+}
