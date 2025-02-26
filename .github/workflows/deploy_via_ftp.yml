@@ -52,12 +52,6 @@ jobs:
         run: |
           npm run build
 
-      - name: ⚡ Optimize Laravel
-        run: |
-          php artisan config:cache
-          php artisan route:cache
-          php artisan view:cache
-
       - name: 📤 Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
