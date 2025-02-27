@@ -13,7 +13,7 @@
             <img x-show="selectedImage == 4" src="website/img/admin-platform-tokens.png" alt="Admin Platform - Token" class="h-full w-full object-cover">
         </div>
         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-3">
-          <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold bg-gray-600 hover:bg-gray-300 text-white shadow-sm ring-1 ring-inset hover:ring-gray-300 ring-gray-600 hover:bg-gray-50 sm:mt-0 sm:w-auto" x-on:click="selectedImage = selectedImage > 3 ? 0 : selectedImage + 1">Next</button>
+          <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold bg-gray-600 hover:bg-gray-300 shadow-sm ring-1 ring-inset hover:ring-gray-300 ring-gray-600 hover:bg-gray-50 sm:mt-0 sm:w-auto" x-on:click="selectedImage = selectedImage > 3 ? 0 : selectedImage + 1">Next</button>
           <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" x-on:click="isAdminPlatformModalActive = false">Cancel</button>
         </div>
       </div>
