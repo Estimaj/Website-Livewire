@@ -10,7 +10,7 @@
             <p class="mt-2 max-w-lg text-sm/6 text-gray-600 max-lg:text-center">I’ve integrated various APIs into different systems, including ERPs, carrier APIs, payment gateways, social media platforms, and more. Here are a few of the more popular ones:</p>
           </div>
           <div class="relative my-8 w-full grid gap-4 lg:grid-cols-2 grid-cols-1 justify-center">
-            <template x-for="integration in ['Stripe','Twitter','Telegram','DHL','DDMS ERP','TIMS ERP','Horizon ERP','D365 Flintech','Business Central','Custom APIs','Website Scraping']">
+            <template x-for="integration in ['Stripe','Twitter','Telegram','DHL','DDMS ERP','TIMS ERP','Horizon ERP','D365 Flintech','Custom APIs','Website Scraping']">
               <p class="text-center text-sm/6 text-gray-600 border rounded-lg py-1" x-text="integration"></p>
             </template>
           </div>
@@ -21,9 +21,9 @@
         <div class="absolute inset-px rounded-lg bg-white"></div>
         <div class="relative h-full rounded-[calc(theme(borderRadius.lg)+1px)] overflow-y-hidden">
           <a href="https://raizarte.com" target="_blank" class="flex flex-col h-full overflow-hidden">
-            <div class="pb-3 pt-8 sm:px-10 sm:pt-10">
+            <div class="p-8 sm:px-10 sm:pt-10">
               <p class="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center flex items-center gap-1 justify-between">
-                Raizarte 
+                <span class="flex-1">Raizarte</span>
                 <x-icons.arrow-top-right-on-square class="size-5" />
               </p>
               <p class="mt-2 max-w-lg text-sm/6 text-gray-600 max-lg:text-center">I built a custom website for a Portugues company, this project helped me learn VueJs and improved my overall skills.</p>
@@ -49,15 +49,13 @@
         <div class="absolute inset-px rounded-lg bg-white"></div>
         <div class="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)]">
           <div class="px-8 pt-8 sm:px-10 sm:pt-10">
-            <p class="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">
-              <a href="https://old.joaoestima.com" target="_blank" class="flex items-center gap-1 justify-between">
-                Old Website
-                <x-icons.arrow-top-right-on-square class="size-5" />
-              </a>
-            </p>
+            <a href="https://old.joaoestima.com" target="_blank" class="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center flex items-center gap-1 justify-between">
+              <span class="flex-1">Old Website</span>
+              <x-icons.arrow-top-right-on-square class="size-5" />
+            </a>
             <p class="mt-2 max-w-lg text-sm/6 text-gray-600 max-lg:text-center">I built this website to learn the stack Inertia & VueJS. Currently deprecated.</p>
           </div>
-          <div class="flex flex-1 items-center [container-type:inline-size] max-lg:py-6 lg:pb-2">
+          <div class="flex flex-1 items-center [container-type:inline-size] max-lg:pb-6 lg:pb-2">
             <img class="mx-auto w-1/2" src="website/img/Laravel_Vue_Inertia.png" alt="Stack">
           </div>
         </div>
@@ -66,10 +64,10 @@
       <div class="relative lg:col-span-full" x-on:click="isAdminPlatformModalActive = true">
         <div class="absolute inset-px rounded-lg bg-white"></div>
         <div class="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] cursor-pointer">
-          <div class="px-8 pt-8 sm:px-10 sm:pt-10">
+          <div class="p-8 sm:px-10 sm:pt-10">
             <p class="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">
-              <p class="flex items-center gap-1 justify-between">
-                PIM (Personal Information Manager)
+              <p class="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center flex items-center gap-1 justify-between">
+                <span class="flex-1">PIM (Personal Information Manager)</span>
                 <x-icons.arrows-pointing-out class="size-5" />
               </a>
             </p>
