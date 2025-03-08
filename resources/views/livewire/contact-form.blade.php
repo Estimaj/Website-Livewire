@@ -1,20 +1,10 @@
 <div>
-
-    {{--
-        TODO: Build the form
-        [x] Export this to a Livewire component.
-        [x] Add Validation (Success message, Error message).
-        [x] Save the event in the activity log.
-        [x] Send an email to the user confirming the message was sent.
-        [x] Send an email to me about the contact.
-        [] Send an telegram message to me about the contact.
-        --}}
     <h2 class="text-4xl font-semibold tracking-tight text-white">Contact Form</h2>
     <form wire:submit="submit" class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div class="sm:col-span-3">
             <label for="firstName" class="block text-sm/6 font-medium text-gray-400">First name</label>
             <div class="mt-2">
-                <input wire:model="firstName" type="text" id="firstName" autocomplete="given-name"
+                <input wire:model="firstName" type="text" id="firstName" autocomplete="given-name" minlength="2" required
                     class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                 @error('firstName') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
@@ -23,7 +13,7 @@
         <div class="sm:col-span-3">
             <label for="lastName" class="block text-sm/6 font-medium text-gray-400">Last name</label>
             <div class="mt-2">
-                <input wire:model="lastName" type="text" id="lastName" autocomplete="family-name"
+                <input wire:model="lastName" type="text" id="lastName" autocomplete="family-name" minlength="2" required
                     class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                 @error('lastName') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
@@ -32,7 +22,7 @@
         <div class="sm:col-span-4">
             <label for="email" class="block text-sm/6 font-medium text-gray-400">Email address</label>
             <div class="mt-2">
-                <input wire:model="email" type="email" id="email" autocomplete="email"
+                <input wire:model="email" type="email" id="email" autocomplete="email" required
                     class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                 @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
@@ -41,7 +31,7 @@
         <div class="sm:col-span-2">
             <label for="phone" class="block text-sm/6 font-medium text-gray-400">Phone Number</label>
             <div class="mt-2">
-                <input wire:model="phone" type="tel" id="phone" autocomplete="tel"
+                <input wire:model="phone" type="tel" id="phone" autocomplete="tel" required minlength="10" pattern="[0-9\s\-\+\(\)]*"
                     class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                 @error('phone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
@@ -50,7 +40,7 @@
         <div class="col-span-full">
             <label for="message" class="block text-sm/6 font-medium text-gray-400">Message</label>
             <div class="mt-2">
-                <textarea wire:model="message" id="message" rows="2"
+                <textarea wire:model="message" id="message" rows="2" required minlength="10"
                     class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></textarea>
                 @error('message') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
