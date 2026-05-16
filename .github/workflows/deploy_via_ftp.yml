@@ -41,7 +41,8 @@ jobs:
           mkdir -p storage/framework/cache
           mkdir -p storage/framework/sessions
           mkdir -p storage/framework/views
-          chmod -R 777 storage bootstrap/cache
+          chmod -R 775 storage bootstrap/cache
+          find storage bootstrap/cache -type f -exec chmod 664 {} \;
 
       - name: 📦 Install Composer dependencies
         uses: ramsey/composer-install@v2
@@ -59,14 +60,18 @@ jobs:
           username: ${{ secrets.FTP_PRODUCTION_USERNAME }}
           password: ${{ secrets.FTP_PRODUCTION_PASSWORD }}
           server-dir: "/"
-          log-level: verbose
+          log-level: minimal
           state-name: ".deployment-state"
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/tests/**
+            **/public/hot
+            **/.env
+            **/.env.*
             .env.example
+            deploy/**
             .editorconfig
             .styleci.yml
             .gitignore

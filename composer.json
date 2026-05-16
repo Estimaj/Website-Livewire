@@ -10,11 +10,11 @@
     "require": {
         "php": "^8.3",
         "laravel-notification-channels/telegram": "^5.0",
-        "laravel/framework": "^11.9",
+        "laravel/framework": "^11.44.1",
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.0",
+        "livewire/livewire": "^3.6.4",
         "sentry/sentry-laravel": "^4.13"
     },
     "require-dev": {
