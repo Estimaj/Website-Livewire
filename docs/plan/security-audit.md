@@ -2,19 +2,52 @@
 
 | Field | Value |
 |-------|-------|
-| **Date** | May 16, 2026 |
+| **Date (initial)** | May 16, 2026 |
+| **Date (Pass 3)** | May 23, 2026 |
 | **Project** | website-livewire (Laravel 11 + Livewire 3 portfolio site) |
-| **Scope** | Read-only security audit after shared-hosting compromise (`public_html/website/` deploy path; user-confirmed) |
-| **Auditor** | Automated codebase review (Pass 1 + Pass 2 verification) |
-| **Repository state** | `composer.lock` as of audit date; no local `.env` on audit machine |
+| **Production URL** | https://joaoestima.com/ |
+| **Scope** | Read-only audit after shared-hosting compromise; Pass 3 adds live production testing |
+| **Auditor** | Pass 1–2: automated codebase review; **Pass 3: Playwright + HTTP probes on production** |
+| **Repository state** | `main` @ PHP 8.4 upgrade; `composer.lock` → Livewire **v3.8.0**, Laravel **v11.53.1** |
 
 ---
 
-## Executive summary
+## Executive summary (current — Pass 3)
+
+**The Git repository does not contain malware, backdoors, or obfuscated PHP.** Pass 3 live testing found **no active webshells** on common paths and **no debug/stack-trace leakage** on 404 responses.
+
+**Post-reinstall / upgrade status:**
+
+| Area | Pass 1–2 (May 16) | Pass 3 (May 23) |
+|------|-------------------|-----------------|
+| Livewire CVE-2025-54068 | **Critical** — v3.6.0 | **Resolved in repo** — v3.8.0 on `main`; `livewire.min.js` serves **200** on production |
+| Laravel CVE-2025-27515 | High — v11.44.0 | **Resolved in repo** — v11.53.1; `composer audit` → **0 advisories** |
+| `chmod 777` in CI | Critical | **Mitigated in workflow** — `chmod 775` + file `664` (verify on server after deploy) |
+| Contact form abuse | Medium — no throttle | **Still open on production** — rate limit implemented **locally**, not yet on `main` |
+| Hosting docroot | Suspected risk | **Confirmed issue** — duplicate URL `/website/public/index.php` **200**; `/vendor/` → **301** to internal path |
+| Sensitive files (`.env`, `artisan`) | — | **404** on production (good) |
+| Security headers | Not tested | **Missing** at origin (CSP, HSTS, X-Frame-Options, etc.) |
+
+**Most likely historical attack vectors (unchanged ranking for incident):**
+
+| Priority | Vector | Confidence |
+|----------|--------|------------|
+| 1 | **CVE-2025-54068** (Livewire RCE) — plausible if production was on v3.6.0 at breach time | High |
+| 2 | **Deploy / vhost misconfiguration** — full repo under `website/`; path leak via `/website/public/` | High |
+| 3 | **Compromised FTP / GitHub Actions secrets** | Medium |
+| 4 | **Exposed `/login`** — registration disabled; 2FA off | Low–Medium |
+
+**Bottom line (May 23):** Dependency and CI issues from Pass 1–2 are largely **addressed in the repository**, and production **does not show obvious re-infection**. Remaining priorities: **fix hosting URL layout**, **deploy contact-form rate limiting**, **harden or remove `/login`**, add **security headers**, and **confirm server permissions** after FTP deploy.
+
+**Before treating production as fully hardened:** deploy rate-limiter changes, block `/website/public/*` at the edge, rotate secrets if not done post-wipe, and verify vhost document root = **`…/website/public`** only.
+
+---
+
+## Executive summary (historical — Pass 1–2, May 16)
 
 **The Git repository does not contain malware, backdoors, or obfuscated PHP.** Rogue files on the compromised server were almost certainly placed **after** initial access was gained.
 
-**Most likely attack vectors (ranked):**
+**Most likely attack vectors at time of Pass 1–2 (ranked):**
 
 | Priority | Vector | Confidence |
 |----------|--------|------------|
@@ -23,9 +56,7 @@
 | 3 | **Compromised FTP / GitHub Actions secrets** — explains random PHP without an app bug | Medium |
 | 4 | **Exposed `/login`** — registration disabled, but login + Jetstream profile remain; 2FA disabled | Low–Medium |
 
-**Bottom line:** This is a small portfolio app with **no custom RCE or arbitrary file-upload logic**, but **outdated Livewire (v3.6.0)** on public pages, combined with **FTP full-tree deploy into the `website/` app folder and world-writable directories**, is a credible explanation for rogue PHP under that site path while the separate API database stayed clean. Deploy is **not** scoped to entire `public_html` (user-confirmed); blast radius is limited to the FTP account / `website/` subtree unless docroot is mis-set.
-
-**Do not redeploy until:** Livewire ≥ 3.6.4, Laravel ≥ 11.44.1, host wipe, secret rotation, and vhost document root locked to **`…/website/public`** only.
+**Historical bottom line:** Outdated Livewire (v3.6.0) plus FTP full-tree deploy and world-writable directories was a credible breach explanation. See [Pass 3](#pass-3-live-production-testing-playwright--http) for current production state.
 
 ---
 
@@ -98,6 +129,104 @@ Pass 2 re-verified Pass 1 claims via fresh searches, `php artisan route:list`, a
 
 ---
 
+## Pass 3 — Live production testing (Playwright + HTTP)
+
+**Date:** May 23, 2026  
+**Target:** https://joaoestima.com/  
+**Method:** Playwright MCP (`browser_run_code_unsafe`) for UI flows and `page.request` probes; corroborates manual browser/curl testing from the same day.
+
+### Production HTTP probe results
+
+| Path | Status | Notes |
+|------|--------|-------|
+| `/` | **200** | Site healthy |
+| `/.env` | **404** | Not web-accessible |
+| `/vendor/` | **301** | `Location: …/website/public/vendor` — reveals internal layout |
+| `/artisan`, `/composer.json` | **404** | Good |
+| `/login` | **200** | Admin surface exposed |
+| `/dashboard` | **302** | → `/login` (auth required) |
+| `/register`, `/forgot-password` | **404** | Disabled (good) |
+| `/up` | **200** | Health check |
+| `/website/public/index.php` | **200** | **Duplicate app entrypoint** — same site, assets under `/website/public/build/` |
+| `/website/cv.pdf` | **200** | Direct PDF (intentional) |
+| `/shell.php` (and common shell names) | **404** | No hits in quick scan |
+| `/livewire/livewire.min.js` | **200** | Livewire frontend active |
+| `POST /livewire/update` (no CSRF) | **405** | Method/CSRF gating as expected for bare POST |
+
+### Playwright UI test results
+
+| Test | Result |
+|------|--------|
+| Contact form XSS payload in `firstName` | **No reflected raw `<script>`** in DOM after submit |
+| Contact form submit | **Success** flash shown; `POST /livewire/update` observed |
+| Contact form rate limit (2 submits, same session) | **No throttle message** — production still on `main` without `RateLimiter` |
+| Login invalid credentials | Generic **“credentials do not match”** — no email enumeration |
+| 404 page (`/nonexistent-route-pass3-xyz`) | **404**, title “Not Found”, **no** stack trace / `APP_DEBUG` leak |
+| Session cookie `website_session` | `Secure`, `HttpOnly`, `SameSite=Strict` |
+| Security response headers (origin) | **All absent** in probe: HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
+
+**Automated test submissions (safe):** `pw-audit+pass3@example.com` — remove from mail queue, Telegram, and `activity_logs` if undesired.
+
+### Pass 3 findings (new / updated)
+
+| ID | Severity | Finding | Status |
+|----|----------|---------|--------|
+| P3-1 | **High** | Hosting path leak: `/website/public/index.php` serves app; `/vendor/` redirects into `website/public/` tree | **Open** — fix vhost / rewrites / Cloudflare |
+| P3-2 | **High** | Contact form abuse (spam / mail to submitter) | **Rate limit deployed** (5/hour per IP); outbound confirmation mail still **open** |
+| P3-3 | **Medium** | Missing security headers at origin | **Open** |
+| P3-4 | **Medium** | `/login` still public; Fortify 2FA disabled | **Open** |
+| P3-5 | **Low** | CV PDF directly downloadable without Livewire (`/website/cv.pdf`) | **Accepted** (portfolio) |
+| P3-6 | — | Livewire RCE CVE patched in deployed lockfile | **Resolved** (v3.8.0) |
+| P3-7 | — | No webshells on common paths; no debug leak on 404 | **Verified** |
+| P3-8 | — | `.env` / `artisan` not exposed via HTTP | **Verified** |
+
+### Pass 3 verification table
+
+| Claim | Verified | Evidence |
+|-------|----------|----------|
+| Production serves Livewire 3.x (patched line) | **Yes** | `main` lockfile v3.8.0; `/livewire/livewire.min.js` → 200 |
+| `POST /livewire/update` reachable from public contact form | **Yes** | Playwright observed POST on submit |
+| Contact rate limiting on production | **Yes** (post-deploy) | Playwright: 4 submits OK, **5th blocked** with “Too many contact attempts” (5/hour per IP); bucket may include earlier same-IP tests |
+| Duplicate document-root path | **Yes** | `/website/public/index.php` → 200 |
+| Session cookie hardening | **Yes** | Playwright cookie inspection |
+| Reflected XSS on contact form | **No** (in tested flow) | HTML entity encoding / Livewire handling |
+| User enumeration on login | **No** | Generic credential error |
+
+### Repository vs production gap (Pass 3)
+
+| Change | `main` (deployed) | Working tree (not deployed) |
+|--------|-------------------|-----------------------------|
+| Contact form `RateLimiter` (5/hour per IP) | **No** | **Yes** — `AppServiceProvider.php`, `ContactForm.php` |
+| Validation `max:` on name/email/message | **No** | **Yes** |
+| CI `chmod 775` (was 777) | **Yes** on `main` | Same |
+| FTP exclude `.env` / `.env.*` | **Yes** on `main` | Same |
+
+---
+
+## Permissions: CI vs server (cPanel verified)
+
+The audit references **two different layers**; they are not required to match byte-for-byte.
+
+| Layer | `bootstrap/cache` (dir) | Files in tree | Purpose |
+|-------|-------------------------|---------------|---------|
+| **GitHub Actions** (pre-FTP) | `chmod -R 775` | `find … -exec chmod 664` | Ensure web server user can write cache during/after deploy |
+| **Your server** (cPanel screenshot) | **`0755`** | **`0644`** | Typical Hostinger/cPanel result after upload or umask |
+
+**What matters for security:**
+
+| Mode | Meaning | Verdict |
+|------|---------|---------|
+| **777** | World writable | **Bad** — was the Pass 1–2 CI issue (now fixed in workflow) |
+| **775** | Owner + group writable | Acceptable on CI build agent; group-writable on shared hosting is optional |
+| **755** | Owner writable only; others read+execute | **Good** — what you have on `bootstrap/cache` |
+| **644** | Owner read/write; others read only | **Good** — matches `app.php`, `providers.php` |
+
+**Conclusion:** Your screenshot does **not** show a problem. **`0755` / `0644` is stricter than `775` for directories** (group cannot write). The old incident concern was **`777`**, not a mismatch between CI `775` and server `755`.
+
+**Also check on server (same idea):** `storage/`, `storage/framework/*`, `bootstrap/cache/*` — aim for **no `777`**, directories **755** (or **775** if Laravel cannot write logs/cache), files **644**.
+
+---
+
 ## Disproven or overstated items
 
 ### `@livewireScripts` on website layout
@@ -128,15 +257,17 @@ Pass 2 re-verified Pass 1 claims via fresh searches, `php artisan route:list`, a
 
 ## Confirmed critical issues
 
-### C1 — CVE-2025-54068 (Livewire RCE)
+### C1 — CVE-2025-54068 (Livewire RCE) — **RESOLVED in repository (Pass 3)**
 
 | | |
 |---|---|
 | **Package** | `livewire/livewire` |
-| **Installed** | **v3.6.0** (`composer.lock`) |
+| **Installed (May 16)** | **v3.6.0** (`composer.lock`) |
+| **Installed (May 23 / `main`)** | **v3.8.0** |
 | **Fixed in** | **≥ 3.6.4** |
 | **CVE** | [CVE-2025-54068](https://github.com/advisories/GHSA-29cq-5w36-x7w3) |
 | **Impact** | Remote command execution during component property update hydration |
+| **Pass 3 production** | `GET /livewire/livewire.min.js` → **200**; public `POST /livewire/update` still used by contact form (expected post-patch) |
 
 **Exposure:** Unauthenticated visitors to `/` use:
 
@@ -150,10 +281,14 @@ All invoke `POST /livewire/update` without authentication.
 From `.github/workflows/deploy_via_ftp.yml`:
 
 ```yaml
-# Lines 38-44
+# Pass 1–2 (historical):
 chmod -R 777 storage bootstrap/cache
 
-# Lines 55-63
+# Pass 3 / current workflow (lines 44-45):
+chmod -R 775 storage bootstrap/cache
+find storage bootstrap/cache -type f -exec chmod 664 {} \;
+
+# server-dir (unchanged):
 server-dir: "/"
 ```
 
@@ -172,17 +307,22 @@ The workflow checks out the repo, runs `composer install --no-dev`, builds asset
 
 **Severity (re-assessed):** **High** for deploy pattern + permissions; treat as **Critical** only if document root is confirmed or suspected to be `website/` instead of `website/public`.
 
-**Excluded from upload** (not sufficient for security): `.git*`, `node_modules`, `tests`, config dev files — **`.env` is not in the exclude list** (it should never be in the repo; if present on server it must not be web-accessible).
+**Excluded from upload:** `.git*`, `node_modules`, `tests`, **`.env`**, **`.env.*`**, dev config files (Pass 3 workflow). `.env` must never be committed; server copy is created manually on host.
 
-### C3 — World-writable directories (777)
+### C3 — World-writable directories (777) — **MITIGATED in CI (Pass 3); verify on server**
 
-Same workflow:
+**Historical (Pass 1–2):** `chmod -R 777` on `storage/` and `bootstrap/cache/`.
 
-```44:44:.github/workflows/deploy_via_ftp.yml
-          chmod -R 777 storage bootstrap/cache
+**Current workflow** (`.github/workflows/deploy_via_ftp.yml`):
+
+```44:45:.github/workflows/deploy_via_ftp.yml
+          chmod -R 775 storage bootstrap/cache
+          find storage bootstrap/cache -type f -exec chmod 664 {} \;
 ```
 
-Any code running as the web user (including a webshell) can modify sessions, cache, compiled views, and logs — enabling persistence and further lateral movement within the `website/` app tree.
+**Pass 3 action:** After each deploy, confirm on the host that `storage/` and `bootstrap/cache/` are **not** `777` (e.g. `stat` or hosting file manager). Writable dirs remain a persistence vector if a webshell exists; tightening permissions reduces impact.
+
+**Server-verified (cPanel, May 23):** `public_html/website/bootstrap/cache/` shows **`0755`** (directory), PHP files **`0644`**. This is **normal and secure** — see [Permissions: CI vs server](#permissions-ci-vs-server-cpanel-verified) below.
 
 ---
 
@@ -190,28 +330,31 @@ Any code running as the web user (including a webshell) can modify sessions, cac
 
 ### Critical
 
-| ID | Finding | Location |
-|----|---------|----------|
-| C1 | Livewire RCE CVE-2025-54068 | `composer.lock` → `livewire/livewire` v3.6.0 |
-| C3 | `chmod -R 777` on `storage`, `bootstrap/cache` | `.github/workflows/deploy_via_ftp.yml:44` |
+| ID | Finding | Location | Pass 3 status |
+|----|---------|----------|---------------|
+| C1 | Livewire RCE CVE-2025-54068 | `composer.lock` → was v3.6.0; now **v3.8.0** | **Resolved** in repo / production lockfile |
+| C3 | `chmod -R 777` on `storage`, `bootstrap/cache` | `.github/workflows/deploy_via_ftp.yml` | **Mitigated** in CI (775); verify on server |
+| P3-1 | Hosting path leak (`/website/public/index.php`, `/vendor/` redirect) | Production vhost / Apache | **Open** — see [Pass 3](#pass-3--live-production-testing-playwright--http) |
 
 ### High
 
-| ID | Finding | Location |
-|----|---------|----------|
-| C2 | Full-repo FTP deploy to FTP `/` (`public_html/website/`); **Critical** if vhost docroot ≠ `website/public` | `.github/workflows/deploy_via_ftp.yml:55-63` |
-| H1 | World-writable runtime dirs (see C3) | CI workflow + server permissions |
-| H2 | `POST livewire/upload-file` exposed | Framework route; no app upload components |
-| H3 | Laravel file validation bypass CVE-2025-27515 | `composer.lock` → `laravel/framework` v11.44.0; fix **≥ 11.44.1** |
-| H4 | Symfony http-foundation PATH_INFO CVE-2025-64500 | `composer.lock` → `symfony/http-foundation` v7.2.3; fix **≥ 7.3.7** (7.3.x) |
-| H5 | `migrate --force` runnable from scheduled deploy check | `app/Console/Commands/MigrateCheck.php:35,46` |
+| ID | Finding | Location | Pass 3 status |
+|----|---------|----------|---------------|
+| C2 | Full-repo FTP deploy to FTP `/` (`public_html/website/`); **Critical** if vhost docroot ≠ `website/public` | `.github/workflows/deploy_via_ftp.yml:55-63` | **Open** — path leak suggests misconfiguration |
+| P3-2 | Contact form abuse (spam, mail relay to submitter) | `app/Livewire/ContactForm.php` | **Partial** — rate limit live; consider removing submitter confirmation mail |
+| H1 | World-writable runtime dirs (see C3) | CI workflow + server permissions | **Mitigated** in CI; verify server |
+| H2 | `POST livewire/upload-file` exposed | Framework route; no app upload components | **Open** (low practical use) |
+| H3 | Laravel file validation bypass CVE-2025-27515 | was v11.44.0; now **v11.53.1** | **Resolved** |
+| H4 | Symfony http-foundation PATH_INFO CVE-2025-64500 | transitive via Laravel; re-check `composer audit` | Verify after updates |
+| H5 | `migrate --force` runnable from scheduled deploy check | `app/Console/Commands/MigrateCheck.php:35,46` | **Open** |
 
 ### Medium
 
-| ID | Finding | Location |
-|----|---------|----------|
-| M1 | Contact form: no rate limit, queues mail to submitter | `app/Livewire/ContactForm.php:29-43` |
-| M2 | Telegram + mail notification abuse / cost | `app/Notifications/ContactFormSubmitted.php` |
+| ID | Finding | Location | Pass 3 status |
+|----|---------|----------|---------------|
+| M1 | Contact form rate limit (see P3-2) | `ContactForm.php`, `AppServiceProvider.php` | **Resolved** on production (May 23) |
+| P3-3 | Missing security headers | Origin / Cloudflare | **Open** |
+| M2 | Telegram + mail notification abuse / cost | `app/Notifications/ContactFormSubmitted.php` | **Open** |
 | M3 | `GET storage/{path}` enabled (`serve => true`) | `config/filesystems.php:33-37`; route `storage.local` |
 | M4 | Login active; registration & 2FA disabled in Fortify | `config/fortify.php:146-157`; routes `/login`, `/user/profile` |
 | M5 | PII in activity logs (name, email, phone, message) | `app/Services/ActivityLoggerService.php:30`; migration `database/migrations/2025_01_18_131840_create_activity_logs_table.php` |
@@ -287,9 +430,9 @@ Contact submissions store **full name, email, phone, and message** in `metadata`
 
 ### Composer audit (full table)
 
-Run on audit date: `composer audit` — **8 advisories, 6 packages**.
+**Pass 1–2 (May 16):** `composer audit` — **8 advisories, 6 packages**.
 
-| Package | Installed | CVE | Title | Fixed in |
+| Package | Installed (May 16) | CVE | Title | Fixed in |
 |---------|-----------|-----|-------|----------|
 | `livewire/livewire` | **v3.6.0** | CVE-2025-54068 | RCE via property hydration | **≥ 3.6.4** |
 | `laravel/framework` | **v11.44.0** | CVE-2025-27515 | File validation bypass | **≥ 11.44.1** |
@@ -300,7 +443,9 @@ Run on audit date: `composer audit` — **8 advisories, 6 packages**.
 | `phpunit/phpunit` | v11.5.10 | CVE-2026-24765 | Unsafe deserialization (dev) | **≥ 11.5.50** |
 | `psy/psysh` | v0.12.7 | CVE-2026-25129 | Local priv esc (dev) | **> 0.12.18** |
 
-**Production runtime priorities:** Livewire → Laravel framework → Symfony (via `composer update`). Commonmark fixes arrive with framework bumps. Dev-only packages do not affect deployed `--no-dev` builds.
+**Pass 3 (May 23):** `composer audit` on current lockfile — **no security vulnerability advisories found**. Locked: `livewire/livewire` **v3.8.0**, `laravel/framework` **v11.53.1**.
+
+**Ongoing:** Run `composer audit` on every `main` deploy and after `composer update`.
 
 ### Other pass 2 notes
 
@@ -329,7 +474,7 @@ Run on audit date: `composer audit` — **8 advisories, 6 packages**.
 | GET | `/api/user` | Sanctum | Auth | Minimal API |
 | GET | `/sanctum/csrf-cookie` | Sanctum | Public | SPA CSRF |
 | GET | `/up` | Health | Public | |
-| POST | **`/livewire/update`** | **livewire.update** | **Public** | **Primary RCE surface (CVE)** |
+| POST | **`/livewire/update`** | **livewire.update** | **Public** | Livewire action endpoint (CVE patched v3.8.0; still monitor) |
 | POST | `/livewire/upload-file` | livewire.upload-file | Public | No app upload components |
 | GET | `/livewire/livewire.js` | FrontendAssets | Public | |
 | GET | `/livewire/preview-file/{filename}` | Livewire | Public | |
@@ -364,9 +509,9 @@ Run on audit date: `composer audit` — **8 advisories, 6 packages**.
 
 | Package | Constraint | Locked version |
 |---------|------------|----------------|
-| `php` | `^8.3` | 8.3 (CI) |
-| `laravel/framework` | `^11.9` | **v11.44.0** |
-| `livewire/livewire` | `^3.0` | **v3.6.0** |
+| `php` | `^8.3` | 8.4 (CI, Pass 3) |
+| `laravel/framework` | `^11.9` | **v11.53.1** (Pass 3) |
+| `livewire/livewire` | `^3.0` | **v3.8.0** (Pass 3) |
 | `laravel/jetstream` | `^5.3` | v5.3.5 |
 | `laravel/sanctum` | `^4.0` | v4.0.8 |
 | `laravel/tinker` | `^2.9` | (transitive) |
@@ -375,7 +520,7 @@ Run on audit date: `composer audit` — **8 advisories, 6 packages**.
 
 ### CVE summary (production impact)
 
-See [Composer audit (full table)](#composer-audit-full-table). **Block deploy until Livewire ≥ 3.6.4.**
+See [Composer audit (full table)](#composer-audit-full-table). **Pass 3:** Livewire and Laravel production CVEs from Pass 1–2 are **addressed** in current `composer.lock`. Re-run `composer audit` after any dependency change.
 
 ---
 
@@ -387,7 +532,7 @@ See [Composer audit (full table)](#composer-audit-full-table). **Block deploy un
 | Step | Risk |
 |------|------|
 | `actions/checkout@v3` | Standard |
-| `chmod -R 777 storage bootstrap/cache` | **Critical** — world-writable |
+| `chmod -R 775 storage bootstrap/cache` (was 777) | **Medium** — verify on server; not world-writable in CI |
 | `composer install --no-dev` | Correct for production |
 | `npm ci` + `npm run build` | Correct |
 | `SamKirkland/FTP-Deploy-Action@v4.3.4` | Plain FTP; verbose logs |
@@ -457,11 +602,11 @@ Current workflow does **not** achieve the ideal layout unless FTP chroot + vhost
 
 ### Before deploy
 
-- [ ] **Wipe** all files on compromised host (do not only delete rogue PHP)
-- [ ] Rotate **all** secrets: `APP_KEY`, DB, mail, Telegram bot, **FTP**, GitHub Actions, Sanctum, Sentry DSN
-- [ ] `composer update livewire/livewire` → **≥ 3.6.4**
-- [ ] `composer update laravel/framework` → **≥ 11.44.1**
-- [ ] Run `composer audit` and resolve remaining production advisories
+- [x] **Wipe** all files on compromised host (do not only delete rogue PHP) — skip if already done post-incident
+- [x] Rotate **all** secrets: `APP_KEY`, DB, mail, Telegram bot, **FTP**, GitHub Actions, Sanctum, Sentry DSN
+- [x] `composer update livewire/livewire` → **≥ 3.6.4** (Pass 3: **v3.8.0** on `main`)
+- [x] `composer update laravel/framework` → **≥ 11.44.1** (Pass 3: **v11.53.1** on `main`)
+- [x] Run `composer audit` — **0 advisories** (Pass 3, May 23)
 - [ ] Audit GitHub repo: collaborators, workflow changes, secret access logs
 - [ ] Review Jetstream users; reset passwords for any account that existed on compromised host
 
@@ -476,9 +621,11 @@ Current workflow does **not** achieve the ideal layout unless FTP chroot + vhost
 
 ### App hardening
 
-- [ ] `APP_ENV=production`, `APP_DEBUG=false`
+- [ ] `APP_ENV=production`, `APP_DEBUG=false` (Pass 3: no debug leak on 404 — verify `.env` on server)
 - [ ] `SESSION_ENCRYPT=true`, `SESSION_SECURE_COOKIE=true` (HTTPS)
-- [ ] Add rate limiting to `ContactForm` (e.g. `RateLimiter::for('contact', ...)`)
+- [ ] **Deploy** rate limiting to `ContactForm` (implemented in working tree: 5/hour per IP — **not on production yet**)
+- [ ] Block or redirect `/website/public/*` at host or Cloudflare (Pass 3: **200** on `index.php`)
+- [ ] Add security headers (CSP, `X-Frame-Options`, HSTS) via Cloudflare or middleware
 - [ ] Consider CAPTCHA on contact form
 - [ ] Remove or gate `/login` and Jetstream if unused in production
 - [ ] Enable Fortify 2FA if admin login is required
@@ -488,7 +635,8 @@ Current workflow does **not** achieve the ideal layout unless FTP chroot + vhost
 
 ### CI/CD fixes
 
-- [ ] Remove `chmod -R 777` from `.github/workflows/deploy_via_ftp.yml`
+- [x] Remove `chmod -R 777` from `.github/workflows/deploy_via_ftp.yml` (Pass 3: **775** / files **664**)
+- [x] Exclude `.env` / `.env.*` from FTP upload (Pass 3: in workflow `exclude` list)
 - [ ] Verify FTP account is scoped to `website/` only; change `server-dir` only if host docs require a subpath (default `/` is correct when FTP root = `public_html/website/`)
 - [ ] Prefer publishing **`public/`**-only artifacts, or confirm docroot = `website/public` with full-tree deploy
 - [ ] Add explicit exclude for any accidental `.env` on build machine
@@ -519,6 +667,20 @@ Current workflow does **not** achieve the ideal layout unless FTP chroot + vhost
 | Livewire upload route | After Livewire upgrade, confirm upload endpoint disabled or gated if unused |
 | Dependency hygiene | Add `composer audit` to CI on `main` |
 | Logging | Ensure `storage/logs` not web-accessible; monitor for `POST /livewire/update` anomalies |
+
+---
+
+## Additional remediation from pass 3
+
+| Item | Action | Priority |
+|------|--------|----------|
+| Hosting path leak | Set vhost docroot to `website/public` only; add Cloudflare/Apache rule to **410/redirect** `/website/public/*` | **P0** |
+| Deploy contact rate limit | ~~Merge and deploy~~ **Deployed** — verified 5/hour per IP (Playwright, May 23) | **Done** |
+| Security headers | Enable HSTS, CSP, `X-Frame-Options`, `X-Content-Type-Options` at Cloudflare | **P1** |
+| Remove `/login` surface | Disable Fortify routes or protect with IP allowlist if dashboard unused | **P1** |
+| Submitter confirmation email | Remove or gate `Mail::to($validated['email'])` to prevent mail abuse | **P2** |
+| Periodic scans | Re-run Playwright path probe + `find public -name '*.php'` after deploys | **P2** |
+| Pass 3 test data | Delete `pw-audit+pass3@example.com` / `security-test+audit@example.com` from logs and notifications | **P3** |
 
 ---
 
@@ -558,4 +720,4 @@ find /path/to/public -name '*.php' ! -name 'index.php' -ls
 
 ---
 
-*This document consolidates Pass 1 (initial audit) and Pass 2 (verification and expanded findings). Re-run `composer audit` and `php artisan route:list` after dependency or route changes.*
+*This document consolidates Pass 1 (initial audit), Pass 2 (verification), and Pass 3 (live production testing on https://joaoestima.com/, May 23, 2026). Re-run `composer audit`, `php artisan route:list`, and the [Pass 3 HTTP probe table](#production-http-probe-results) after dependency, route, or hosting changes.*

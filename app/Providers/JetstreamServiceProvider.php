@@ -13,7 +13,7 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        Jetstream::ignoreRoutes();
     }
 
     /**
@@ -21,8 +21,6 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Jetstream::ignoreRoutes();
-
         // $this->configurePermissions();
 
         // Jetstream::deleteUsersUsing(DeleteUser::class);

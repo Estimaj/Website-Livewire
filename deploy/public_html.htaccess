@@ -1,5 +1,5 @@
-# Upload to: public_html/.htaccess (cPanel home → public_html)
-# FTP deploy targets public_html/website/ only — this file is NOT deployed by CI.
+# Upload to: public_html/.htaccess (WinterNode/cPanel → public_html)
+# FTP deploy targets public_html/website/ only — NOT deployed by CI.
 # See docs/plan/reinstall-runbook.md Phase 5.1
 
 <IfModule mod_rewrite.c>
