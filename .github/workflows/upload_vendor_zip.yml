@@ -1,0 +1,74 @@
+# Manual only. Compares vendor/composer/installed.json on the server to this
+# build; uploads vendor.zip when they differ (first deploy or lockfile change).
+name: Upload vendor.zip
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Upload even if the server vendor already matches'
+        type: boolean
+        default: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+
+      - name: 📦 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: 📦 Install Composer dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          composer-options: "--no-dev --optimize-autoloader"
+
+      - name: 📦 Zip and upload vendor.zip if needed
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_PRODUCTION_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PRODUCTION_PASSWORD }}
+          FORCE_UPLOAD: ${{ github.event.inputs.force }}
+        run: |
+          python3 - << 'PY'
+          import os
+          import subprocess
+          from ftplib import FTP, error_perm
+          from io import BytesIO
+          from pathlib import Path
+
+          local_path = Path("vendor/composer/installed.json")
+          local = local_path.read_bytes()
+
+          server = os.environ["FTP_SERVER"].replace("ftp://", "").replace("ftps://", "")
+          host, _, port = server.partition(":")
+          ftp = FTP()
+          ftp.connect(host, int(port) if port else 21, timeout=120)
+          ftp.login(os.environ["FTP_USERNAME"], os.environ["FTP_PASSWORD"])
+          ftp.set_pasv(True)
+
+          remote = None
+          try:
+              buf = BytesIO()
+              ftp.retrbinary("RETR vendor/composer/installed.json", buf.write)
+              remote = buf.getvalue()
+          except error_perm:
+              print("No vendor/composer/installed.json on the server.")
+
+          force = os.environ.get("FORCE_UPLOAD") == "true"
+          if not force and remote == local:
+              ftp.quit()
+              print("Server vendor already matches this build. Nothing to upload.")
+              raise SystemExit(0)
+
+          subprocess.check_call(["zip", "-r", "-q", "vendor.zip", "vendor"])
+          with open("vendor.zip", "rb") as handle:
+              ftp.storbinary("STOR vendor.zip", handle)
+          ftp.quit()
+          print("Uploaded vendor.zip")
+          print("::warning::Extract vendor.zip in cPanel File Manager at public_html/website/, then delete the zip.")
+          PY
