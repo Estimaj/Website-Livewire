@@ -59,7 +59,7 @@ You said you can drop the site and DB. Backup is **minimal**.
 
 - Any `.php` with random names (`fjtjhyo.php`, `nclfaeva.php`, shells under `vendor/`, etc.)
 - `website_backup/` (infected copy)
-- `vendor/` from server (rebuild via Composer on deploy)
+- `vendor/` from server (rebuild via **Upload vendor.zip**, not a copy of the old tree)
 - `node_modules/`
 
 ### ME
@@ -177,9 +177,14 @@ FTP deploys only to `public_html/website/`. The domain hits `public_html/` first
 
 ### 5.2 Trigger deploy (YOU)
 
+`vendor/` is **not** uploaded by the app FTP workflow (file-by-file vendor times out on this host). See [architecture.md §8.4](./architecture.md#84-composer-dependencies-vendor).
+
 1. Merge hardened `main`
-2. GitHub Actions → **Deploy via FTP Production** → run workflow
-3. Wait for green check
+2. GitHub Actions → **Deploy via FTP Production** → run workflow → wait for green check
+3. GitHub Actions → **Upload vendor.zip** → run workflow (check **Force** on a brand-new empty `website/`)
+4. File Manager → `public_html/website/` → **Extract** `vendor.zip` next to `artisan` → **delete** the zip
+
+When Composer dependencies change later: run **Upload vendor.zip** again and extract. Do not add `vendor/` back to `deploy_via_ftp.yml`.
 
 ### 5.3 Create server `.env` (YOU)
 
@@ -262,7 +267,7 @@ Adjust username/path if panel shows a different home directory.
 | 2 Secrets | Rotate FTP, DB, mail, Telegram, GitHub | — |
 | 3 Harden code | Review & merge PR | Composer, workflow, htaccess template, audit CI |
 | 4 Wipe | Delete `public_html/*`, `logs/*.php` | — |
-| 5 Deploy | Root `.htaccess`, `.env`, artisan, cron | FTP deploy via push |
+| 5 Deploy | Root `.htaccess`, `.env`, artisan, cron, unzip `vendor.zip` | App FTP + **Upload vendor.zip** |
 | 6 Verify | Browser + File Manager checks | Follow-up hardening |
 
 ---

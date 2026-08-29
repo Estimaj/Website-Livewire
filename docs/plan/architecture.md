@@ -345,19 +345,27 @@ No user uploads are implemented; CV path is hardcoded.
 
 ### 8.1 CI → FTP flow
 
-**Workflow:** `.github/workflows/deploy_via_ftp.yml`  
+**App workflow:** `.github/workflows/deploy_via_ftp.yml`  
 **Trigger:** Push to `main` or `workflow_dispatch`
+
+**Vendor workflow:** `.github/workflows/upload_vendor_zip.yml`  
+**Trigger:** Manual `workflow_dispatch` only (see [§8.4](#84-composer-dependencies-vendor))
+
+There is **no SSH** on this host. cPanel File Manager + GitHub Actions FTP are the deploy path.
 
 ```mermaid
 flowchart TD
     Push[Push to main] --> Checkout[actions/checkout@v3]
-    Checkout --> PHP[Setup PHP 8.3]
+    Checkout --> PHP[Setup PHP 8.4]
     PHP --> NPM[npm ci]
-    NPM --> Chmod["chmod -R 777<br/>storage bootstrap/cache"]
+    NPM --> Chmod["chmod 775 storage bootstrap/cache"]
     Chmod --> Composer["composer install --no-dev"]
     Composer --> Build[npm run build]
-    Build --> FTP["SamKirkland/FTP-Deploy-Action<br/>server-dir: /<br/>state: .deployment-state"]
+    Build --> FTP["FTP-Deploy-Action<br/>excludes vendor/<br/>state: .deployment-state"]
     FTP --> Server["public_html/website/"]
+    VendorWF["Upload vendor.zip<br/>manual workflow"] --> Zip["vendor.zip at website root"]
+    Zip --> Extract["YOU: File Manager Extract"]
+    Extract --> VendorDir["website/vendor/"]
     Server --> Cron{Cron schedule:run?}
     Cron -->|yes| DeployCheck[deploy:check]
     DeployCheck --> Migrate[migrate:check → migrate --force]
@@ -368,31 +376,37 @@ flowchart TD
 | CI setting | Resolves to on server |
 |------------|------------------------|
 | `server-dir: "/"` | FTP account root = **`public_html/website/`** |
-| Uploaded tree | Full repo: `artisan`, `.env` (if on server), `vendor/`, `storage/`, `public/`, etc. |
-| Excluded | `.git*`, `node_modules`, `tests`, dev configs, `README.md`, … |
-| **Not** excluded | `.env` on build machine (must never be in repo) |
-| State file | `.deployment-state` at app root → triggers `deploy:check` |
+| Uploaded by app workflow | App tree: `artisan`, `app/`, `public/`, `resources/`, `storage/`, `composer.lock`, … |
+| Excluded from app FTP | `vendor/`, `vendor.zip`, `.git*`, `node_modules`, `tests`, `.env*`, dev configs, `README.md`, … |
+| `vendor/` | **Not** file-by-file FTP. Arrive via **Upload vendor.zip** + File Manager extract |
+| **Not** uploaded | `.env` (operator maintains on host only) |
+| State file | `.deployment-state` at app root → triggers `deploy:check`. **Does not list `vendor/` files** |
 
-### 8.3 Permissions (current vs recommended)
+### 8.3 Permissions (CI)
 
-| Path | Current (CI) | Recommended after reinstall |
-|------|--------------|------------------------------|
-| `storage/` | **777** | **775** (owner/group write; no world write) |
-| `bootstrap/cache/` | **777** | **775** |
+| Path | CI | On server |
+|------|----|-----------|
+| `storage/` | **775** | Confirm **775** after extract |
+| `bootstrap/cache/` | **775** | Confirm **775** |
 | Other dirs | — | **755** |
-| Files | — | **644** |
+| Files | **664** under storage / bootstrap cache | **644** |
 
-The workflow explicitly runs:
+Do **not** use 777.
 
-```38:44:.github/workflows/deploy_via_ftp.yml
-      - name: 📂 Directory Permissions
-        run: |
-          mkdir -p storage/logs
-          mkdir -p storage/framework/cache
-          mkdir -p storage/framework/sessions
-          mkdir -p storage/framework/views
-          chmod -R 777 storage bootstrap/cache
-```
+### 8.4 Composer dependencies (`vendor/`)
+
+**Agents: do not re-add `vendor/` to `.github/workflows/deploy_via_ftp.yml`.** Shared-host FTP drops the session on a first-publish of ~8k `vendor/` files (`Server sent FIN packet unexpectedly`). After a successful app deploy, `.deployment-state` still has **no** vendor hashes, so removing the exclude would look like thousands of new uploads and time out again.
+
+When **Composer dependencies change** (`composer.lock` / new packages):
+
+1. Ship the app as usual (push to `main` or **Deploy via FTP Production**).
+2. GitHub Actions → **Upload vendor.zip** → Run workflow. Optional **Force** uploads even if the server already matches.
+3. The job compares local `vendor/composer/installed.json` to the copy on the server. If they differ (or Force is on), it uploads **one** `vendor.zip` to the FTP root (`public_html/website/vendor.zip`).
+4. **YOU:** cPanel File Manager → `public_html/website/` → **Extract** `vendor.zip` so `vendor/` sits next to `artisan` → **delete** `vendor.zip`.
+
+First deploy to an empty `website/` is the same two workflows, then extract. Do not unzip under `public/` (that would expose packages on the web).
+
+The host has no SSH, so there is no `composer install` on the server. Cron can still run `php artisan` without a shell.
 
 ---
 
@@ -422,7 +436,7 @@ Do **not** commit values; rotate all of:
 
 ### 9.3 GitHub Actions secrets
 
-Referenced in `.github/workflows/deploy_via_ftp.yml`: `FTP_SERVER`, `FTP_PRODUCTION_USERNAME`, `FTP_PRODUCTION_PASSWORD`.
+Referenced in `.github/workflows/deploy_via_ftp.yml` and `.github/workflows/upload_vendor_zip.yml`: `FTP_SERVER`, `FTP_PRODUCTION_USERNAME`, `FTP_PRODUCTION_PASSWORD`.
 
 ---
 
@@ -445,7 +459,7 @@ Referenced in `.github/workflows/deploy_via_ftp.yml`: `FTP_SERVER`, `FTP_PRODUCT
 
 | Artifact | Location | Risk / action |
 |----------|----------|---------------|
-| **`.deployment-state`** | `website/` root | Required for `deploy:check`; regenerate on first FTP deploy |
+| **`.deployment-state`** | `website/` root | Required for `deploy:check`; first app FTP deploy writes it **without** `vendor/` entries — do not re-include `vendor/` in that workflow |
 | **`website_backup/`** | `public_html/website_backup/` | **High** — web-accessible old deploy (~390 log hits); active webshells; **delete on wipe** |
 | **Root `.htaccess`** | `public_html/.htaccess` | **Critical** — hijacked during incident; must restore redirect to `website/public/` |
 | **Rogue PHP** | `public_html/`, `website/public/`, `~/logs/` | `fjtjhyo.php` (Apr 5), `nclfaeva.php` (Apr 15); remove all non-`index.php` PHP under web paths |
@@ -495,7 +509,8 @@ Use this checklist when rebuilding on wiped `public_html` + `logs/` (+ optional 
 
 - [ ] Remove `chmod -R 777` from `.github/workflows/deploy_via_ftp.yml`; use **775** or let host default apply post-deploy
 - [ ] Rotate GitHub FTP secrets; review Actions access logs
-- [ ] Consider SFTP/SSH deploy or artifact that minimizes uploaded surface
+- [x] App FTP excludes `vendor/`; refresh packages with **Upload vendor.zip** + File Manager extract ([§8.4](#84-composer-dependencies-vendor))
+- [ ] Do not re-add `vendor/` to file-by-file FTP unless the host gets SSH/`composer install` or a resumable transfer
 
 ### Operations
 
@@ -518,7 +533,8 @@ Top risks are documented in [security-audit.md](./security-audit.md): **Livewire
 | [docs/plan/security-audit.md](./security-audit.md) | Full CVE table, attack surface, remediation checklist |
 | [docs/plan/reinstall-runbook.md](./reinstall-runbook.md) | Step-by-step wipe, deploy, and YOU/ME task split |
 | [CVE-2025-54068](https://github.com/advisories/GHSA-29cq-5w36-x7w3) | Livewire RCE |
-| `.github/workflows/deploy_via_ftp.yml` | Production deploy pipeline |
+| `.github/workflows/deploy_via_ftp.yml` | Production **app** FTP (excludes `vendor/`) |
+| `.github/workflows/upload_vendor_zip.yml` | Manual **vendor.zip** upload when Composer deps change |
 | [SamKirkland/FTP-Deploy-Action](https://github.com/SamKirkland/FTP-Deploy-Action) | `server-dir` relative to FTP home |
 
 ---
