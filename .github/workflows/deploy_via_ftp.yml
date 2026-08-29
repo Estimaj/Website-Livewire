@@ -66,6 +66,8 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/vendor/**
+            vendor.zip
             **/tests/**
             **/public/hot
             **/.env
